@@ -17,7 +17,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\PortfolioController;
-use App\Http\Controllers\PublishedController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\SendmailController;
 use App\Http\Controllers\TagsController;
@@ -202,15 +201,6 @@ Route::resource('/dashboard/manajemen-user', UserController::class)->except('sho
 // -----------------------------------------------end Manajemen user------------------------------------------------
 
 
-// ---------------------------------------------Update Published-------------------------------------------------
-
-Route::resource('/dashboard/posts', PublishedController::class)->middleware('auth');
-
-// -----------------------------------------------end published----------------------------------------------------
-
-// Route::get('/dashboard/kirim-email', [SubscriberController::class, 'email']);
-
-
 
 // -----------------------------------------------subcscriber-----------------------------------------------------------
 Route::resource('/dashboard/subscriber', SubscriberController::class,)->except('show')->middleware('auth','admin');
@@ -242,8 +232,9 @@ Route::resource('/dashboard/tags', TagsController::class,)->except('show','updat
 // admin categories resource route
 Route::resource('/dashboard/categories', AdminCategoryController::class,)->except('show','update','edit')->middleware(['auth','admin']);;
 // resource route mypost
-Route::resource('/dashboard/posts', DashboardPostController::class)->middleware(['auth']);
-
+Route::resource('/dashboard/posts', DashboardPostController::class)->middleware(['auth'])->except('show');
+// update post published
+Route::put('/dashboard/posts/{post:id}' ,[DashboardPostController::class,'updatepublished'])->middleware('admin')->name('updatepublished');
 
 
 //  profile update

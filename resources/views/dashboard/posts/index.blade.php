@@ -57,11 +57,15 @@
               
             </td>
             <td class="text-dark">
-              @if (isset($post->published_at))
+              @if (isset($post->is_published))
               <small class="text-muted"><i class="far fa-calendar fa-sm"></i> {{ Carbon\Carbon::parse($post->published_at)->format('d M,Y') }}
               </small>
               @else
-                <small>No publishing</small>
+                {{-- <small>No publishing</small> --}}
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ $post->id }}">
+                  <i class="fa fa-upload" aria-hidden="true"></i> Publish
+                </button>
               @endif
               
             </td>
@@ -105,15 +109,60 @@
 
     </div>
   </div>
-  {{-- Auto close --}}
-<script>
-  window.setTimeout(function() {
-    $(".alert").fadeTo(500, 0).slideUp(500, function(){
-      $(this).remove(); 
-    });
-  }, 1500);
-</script>
+  
 
 
+
+
+  {{-- Modal --}}
+ 
+
+
+<!-- Modal -->
+@foreach ($posts as $post )
+
+<div class="modal fade" id="exampleModal{{ $post->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Published <span class="bg-warning text-white">{{ $post->title }}</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('updatepublished',$post->id) }}}}" method="post">
+          @csrf
+          @method('put')
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Set Publish</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" name="is_published">
+              <option selected>----------Pilih----------</option>
+              <option value="1">Publish</option>
+              
+            </select>
+          </div>
+          
+        
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-default">Tanggal Terbit</span>
+            </div>
+            <input type="date" class="form-control" aria-label="Sizing example input" name="published_at" aria-describedby="inputGroup-sizing-default">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn" style="background-color: rgb(143, 97, 218); color:white;">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+  
+@endforeach
 
 @endsection

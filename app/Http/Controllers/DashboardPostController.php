@@ -157,18 +157,18 @@ class DashboardPostController extends Controller
         if (auth()->user()->id == $post->user_id) {
 
 
-                $rules = [
+            $validatedData = $request->validate([
 
                     'title' => 'required|max:255',
-                    'slug' => 'max:255',
-                    'published_at' => 'max:120',
+                    'slug' => Str::slug($request->title, '-'),
+                    // 'published_at' => 'max:120',
                     'category_id' => 'required',
                     'tag_id' => 'required',
                     'description' =>'required',
-                    'is_published' => 'max:1',
+                    // 'is_published' => 'max:1',
                     'image' => 'image|file|max:2048',
                     'body' => 'required'
-                ];
+                ]);
             
         
 
@@ -176,7 +176,7 @@ class DashboardPostController extends Controller
         //     $rules['slug'] = 'required|unique:posts';
         // }
 
-        $validatedData = $request->validate($rules);
+        // $validatedData = $request->validate($rules);
 
         //    cek jika ada gambar yg di upload maka tampilkan gambar dari storage
         if ($request->file('image')) {
@@ -207,26 +207,7 @@ class DashboardPostController extends Controller
     }
     }
 
-    // public function updatepublished(Request $request, $id)
-    // {
-       
-
-    //     // if (Auth::user()->username == 'Moh.Agung')  
-       
-    //         $validatedData = $request->validate([
-    //             'is_published'=> 'required',
-    //             'published_at'=> 'required'
-    //        ]);    
-    
-    //        Post::whereId($id)->update($validatedData);
-           
-    
-    //        $request->session(Alert::success('success', 'Postingan telah diterbitkan!'));
-    //        return redirect('/dashboard/posts');
-
-        
-       
-    // }
+   
 
     /**
      * Remove the specified resource from storage.
@@ -276,6 +257,24 @@ class DashboardPostController extends Controller
         $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
         return response()->json(['slug' => $slug]);
 
+
+    }
+
+
+    public function updatepublished(Request $request,$id)
+    {
+
+        
+        $post = Post::find($id);
+        
+        $post->published_at = $request->input('published_at');
+        $post->is_published = $request->input('is_published');
+
+        $post->update();
+        
+
+            $request->session(Alert::success('success', 'Postingan telah terbit!'));
+            return redirect('/dashboard/posts');
 
     }
 }
