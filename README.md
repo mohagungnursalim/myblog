@@ -9,6 +9,6 @@
 
 ## About App
 
-Main Code of [the-devcode.com](http://the-devcode.com/) built with Laravel Framework https://laravel.com/
+Main Code of myblog built with Laravel Framework https://laravel.com/
 
 
