@@ -9,6 +9,6 @@
 
 ## About App
 
-Main Code of [the-devcode.com](http://the-devcode.com/) built with Laravel Framework https://laravel.com/
+Simple personal blog, and already SEO. Made using Laravel, jQuery & Bootstrap.
 
 
